@@ -1,18 +1,20 @@
-from random import randint
-listanome = perfil = listacodigo = []
+from random import randint; from datetime import date
+import json; import os
+listanome = perfil = listacodigo = listaadm = []
 cont = comidas = pagamento = preco = 0
-pedido = endereco = forma = codigo = pedir = 'y'
+pedido = endereco = forma = codigo = pedir = adm = 'y'
+dia = date.today().day; mes = date.today().month; ano = date.today().year
 pedir = str(input('Você deseja realizar um pedido em nossa loja? [ S / N ] - '))
 while pedir in 'Ss':
     nome = str(input('Digite seu nome: ')).strip()
     comidas = int(input('''
 !!! 15% DE DESCONTO NO PRIMEIRO PEDIDO !!!
                         
-[1] Combo japonês (R$ 69,90)
-[2] Marmita (R$ 24,90)
-[3] Combo Hambúrguer (R$ 44,90)
-[4] Pizza (R$ 59,90)
-[5] Açaí (R$ 19,90)
+[1] Combo japonês................(R$ 69,90)
+[2] Marmita......................(R$ 24,90)
+[3] Combo Hambúrguer.............(R$ 44,90)
+[4] Pizza........................(R$ 59,90)
+[5] Açaí.........................(R$ 19,90)
 
 Qual será o seu pedido hoje? - '''))
     pagamento = int(input('''
@@ -42,6 +44,9 @@ Qual o endereço de entrega? - '''))
         pedido = 'Pizza'
     elif comidas == 5:
         pedido = 'Açaí'
+    if os.path.exists("listanome.json"):
+        with open("listanome.json", "r") as arquivo:
+            listanome = json.load(arquivo)
     nomecerto = ('').join(nome)
     listanome.append(nomecerto)
     cont = listanome.count(nomecerto)
@@ -90,7 +95,7 @@ Qual o endereço de entrega? - '''))
         print ('='*65, end=''), print ('='*espacomais)
         print (f'Essa é a sua {cont}° vez pedindo na nossa loja, bem vindo de volta {nomecerto}!')
         print ('='*65, end=''), print ('='*espacomais)
-    print (f'''Seu pedido foi cadastrado com sucesso! {perfil}
+    print (f'''Seu pedido foi cadastrado com sucesso! {perfil} Dia: {dia}.{mes}.{ano}
 *''')
     if pagamento > 1:
         print (f'''Seu pagamento de R${preco:.2f} deverá ser efetuado via {forma}.
@@ -100,5 +105,7 @@ Qual o endereço de entrega? - '''))
         print (f'''Seu pagamento de R${preco:.2f} será efetuado via {forma} no endereço {endereco}.
 *''')
         print (f'O código do seu pedido é: {codigo}')
+    with open("listanome.json", "w") as arquivo:
+        json.dump(listanome, arquivo)
     pedir = 'y'
-    pedir = str(input('Você deseja realizar um pedido em nossa loja? [ S / N ] - '))
+    pedir = str(input('Você deseja realizar outro pedido em nossa loja? [ S / N ] - '))
